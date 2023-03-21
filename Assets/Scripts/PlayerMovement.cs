@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float movementSpeed = 10f;
+    public int health;
+    public int maxHealth;
+    public float speed;
     public SpriteRenderer sr;
     public Animator animator;
 
     Vector2 movementDirection;
 
     Rigidbody2D rb;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,8 +40,16 @@ public class PlayerMovement : MonoBehaviour
 
         movementDirection = new Vector2(moveX, moveY).normalized;
 
-        rb.velocity = new Vector2(movementDirection.x * movementSpeed, movementDirection.y * movementSpeed);
+        rb.velocity = new Vector2(movementDirection.x * speed, movementDirection.y * speed);
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.CompareTag("Enemy"))
+        {
+
+        }
     }
 
 }
