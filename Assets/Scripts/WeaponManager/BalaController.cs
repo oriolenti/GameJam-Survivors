@@ -7,11 +7,6 @@ using UnityEngine;
 /// </summary>
 public class BalaController : MonoBehaviour
 {
-
-    public WeaponController weaponData;
-
-    protected Vector3 direction;
-
     public float destroyAfterSeconds;
 
     //Current stats
@@ -20,30 +15,34 @@ public class BalaController : MonoBehaviour
     protected float currentCooldownDuration;
     protected int currentPierce;
 
-    void Awake()
+    [SerializeField] protected Rigidbody2D rb;
+
+    public ParticleSystem particles;
+
+    public void SetupData(WeaponController weaponData)
     {
         currentDamage = weaponData.damage;
         currentSpeed = weaponData.speed;
         currentCooldownDuration = weaponData.wait;
         currentPierce = weaponData.pierce;
     }
+
     protected virtual void Start()
     {
+        rb.AddForce(this.transform.right * currentSpeed, ForceMode2D.Impulse);
         Destroy(gameObject, destroyAfterSeconds);
     }
-
-    public void DirectionChecker(Vector3 dir)
-    {
-        direction = dir;
-    }
-
-    protected virtual void OnTriggerEnter2D(Collider2D col)
+    protected void OnCollisionEnter2D(Collision2D collision)
     {
         //Reference the script from the collided collider and deal damage using TakeDamage()
-        if (col.CompareTag("Enemy"))
+        if (collision.collider.CompareTag("Enemy"))
         {
-            EnemyMovement enemy = col.GetComponent<EnemyMovement>();
-            enemy.TakeDamage(currentDamage);     //Make sure to use currentDamage instead of weaponData.Damage in case any damage multipliers in the future
+            EnemyMovement enemy = collision.collider.gameObject.GetComponent<EnemyMovement>();
+            enemy.TakeDamage(currentDamage, rb.velocity);     //Make sure to use currentDamage instead of weaponData.Damage in case any damage multipliers in the future
         }
+        Destroy(particles, 0.5f);
+        particles.transform.parent = null;
+        particles.Play();
+        Destroy(this.gameObject);
     }
 }

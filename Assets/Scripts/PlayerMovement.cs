@@ -15,8 +15,6 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     internal Vector3 lastMovedVector;
 
-
-
     // Start is called before the first frame update
     void Start()
     {
@@ -24,10 +22,6 @@ public class PlayerMovement : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
     }
-
-    // Update is called once per frame
-    void Update()
-    { }
 
     void FixedUpdate()
     {
@@ -41,8 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
         movementDirection = new Vector2(moveX, moveY).normalized;
 
-        rb.velocity = new Vector2(movementDirection.x * speed, movementDirection.y * speed);
-
+        rb.AddForce(movementDirection * speed, ForceMode2D.Force);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

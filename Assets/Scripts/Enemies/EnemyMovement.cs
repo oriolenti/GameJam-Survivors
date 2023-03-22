@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    public Rigidbody2D rb;
     Transform player;
     public float health;
     public int damage;
@@ -12,8 +13,6 @@ public class EnemyMovement : MonoBehaviour
     public float distance;
     public float range;
 
-
-
     void Start()
     {
         player = FindObjectOfType<PlayerMovement>().transform;
@@ -21,44 +20,23 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-
         //Detectar rango con Player
-        distance = Vector3.Distance(player.position, transform.position);
+        Vector2 thisToPlayer = player.transform.position - this.transform.position;
 
-        //Area de Seguridad: Más lento cerca del Player
-        if (distance <= range)
-        {
-            speed = maxSpeed / 2;
-            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
-        }
+        float calculatedSpeed = thisToPlayer.magnitude <= range ? speed / 2f : speed;
 
-        else
-        {
-            //Reset de Velocidad
-            speed = maxSpeed;
-
-            //Perseguir al Player normal
-            transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
-        }
-
+        rb.AddForce(calculatedSpeed * thisToPlayer.normalized, ForceMode2D.Force);
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.CompareTag("Player"))
-        {
-
-        }
-    }
     public void Kill()
     {
         Destroy(gameObject);
     }
 
-    public void TakeDamage(float dmg)
+    public void TakeDamage(float dmg, Vector2 pushDir)
     {
         health -= dmg;
-
+        rb.AddForce(pushDir, ForceMode2D.Impulse);
         if (health <= 0)
         {
             Kill();

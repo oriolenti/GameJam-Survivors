@@ -35,5 +35,7 @@ public class WeaponController : MonoBehaviour
     protected virtual void Attack()
     {
         cooldown = wait;
+        GameObject spawnBala = Instantiate(prefab, transform.position, transform.rotation);
+        spawnBala.GetComponent<BalaController>().SetupData(this);
     }
 }
