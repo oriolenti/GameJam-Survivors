@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody2D rb;
     internal Vector3 lastMovedVector;
+
+    protected float enemyDamage;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -38,10 +42,16 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(movementDirection * speed, ForceMode2D.Force);
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    protected void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collider.CompareTag("Enemy"))
+        if (collision.collider.CompareTag("Enemy"))
         {
+            health = health - 10;
+
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+            }
 
         }
     }
