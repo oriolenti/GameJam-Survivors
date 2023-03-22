@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movementDirection;
 
     Rigidbody2D rb;
+    internal Vector3 lastMovedVector;
 
 
 

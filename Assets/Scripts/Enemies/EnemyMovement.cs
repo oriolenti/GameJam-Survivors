@@ -50,4 +50,18 @@ public class EnemyMovement : MonoBehaviour
 
         }
     }
+    public void Kill()
+    {
+        Destroy(gameObject);
+    }
+
+    public void TakeDamage(float dmg)
+    {
+        health -= dmg;
+
+        if (health <= 0)
+        {
+            Kill();
+        }
+    }
 }
